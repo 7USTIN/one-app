@@ -4,7 +4,8 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const routes = require("./routes");
+const apiRouter = require("./apiRouter");
+const { scheduler } = require("./scheduler");
 const { port, mongoURI } = require("./config");
 
 const app = express();
@@ -21,8 +22,10 @@ mongoose
 	.then(() => console.log("MongoDB connected"))
 	.catch(console.error);
 
-app.use("/api/", routes);
+app.use("/api/", apiRouter);
 
 app.listen(port, () => {
 	console.log(`Express server listening on ${port}`);
 });
+
+scheduler();

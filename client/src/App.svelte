@@ -13,7 +13,7 @@
 
 		loading = false;
 	};
-	//onMount(fetchScrapingData);
+	onMount(fetchScrapingData);
 </script>
 
 <main>
@@ -57,4 +57,3 @@
 		}
 	}
 </style>
-

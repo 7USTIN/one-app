@@ -47,6 +47,15 @@ const evalElement = async (el, selector, fn) => {
 	return null;
 };
 
+const shuffleArray = (array) => {
+	for (let i = array.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[array[i], array[j]] = [array[j], array[i]];
+	}
+
+	return array;
+};
+
 const data = {
 	dev: {
 		name: "DEV",
@@ -75,12 +84,12 @@ const data = {
 				likes: await evalElement(
 					element,
 					"div[class='crayons-story__details'] > a[data-reaction-count]",
-					(node) => Number(node.innerText.trim().split(" ")[0])
+					(node) => node.innerText.trim().split(" ")[0]
 				),
 				comments: await evalElement(
 					element,
 					"div[class='crayons-story__details'] > a:not([data-reaction-count])",
-					(node) => Number(node.innerText.trim().split(" ")[0])
+					(node) => node.innerText.trim().split(" ")[0]
 				),
 			};
 
@@ -123,7 +132,7 @@ const data = {
 				likes: await evalElement(
 					element,
 					"div[class='f6 color-fg-muted mt-2'] > a[href*='stargazers']",
-					(node) => Number(node.innerText.trim())
+					(node) => node.innerText.trim()
 				),
 				comments: null,
 			};
@@ -184,7 +193,7 @@ const data = {
 				comments: await evalElement(
 					element,
 					"td[class='subtext'] > :last-child",
-					(node) => Number(node.innerText.trim().split(" ")[0])
+					(node) => node.innerText.trim().split(" ")[0]
 				),
 			};
 		},
@@ -220,7 +229,7 @@ const data = {
 				authorURL: await evalElement(
 					element,
 					"div[class='montana-item-meta'] > span > a[data-card]",
-					(node) => node.getAttribute("href")
+					(node) => `https://www.designernews.co${node.getAttribute("href")}`
 				),
 				likes: await evalElement(
 					element,
@@ -263,7 +272,7 @@ const data = {
 				authorURL: await evalElement(
 					element,
 					"span[class='story-byline'] > a",
-					(node) => node.getAttribute("href")
+					(node) => `https:${node.getAttribute("href")}`
 				),
 				likes: null,
 				comments: await evalElement(
@@ -313,7 +322,7 @@ const data = {
 				comments: await evalElement(
 					element,
 					"a[data-event-action='comments']",
-					(node) => node.innerText.trim()
+					(node) => node.innerText.trim().split(" ")[0]
 				),
 			};
 		},
@@ -385,6 +394,14 @@ const scraper = async (requestedNum) => {
 	}
 
 	delete data.hackerNewsTemporary;
+
+	let concatenatedResults = [];
+
+	for (const { results } of Object.values(data)) {
+		concatenatedResults = concatenatedResults.concat(results);
+	}
+
+	data.shuffledResults = shuffleArray(concatenatedResults);
 
 	return data;
 };
