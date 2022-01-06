@@ -21,6 +21,7 @@
 
 		p {
 			font-size: 16px;
+			font-weight: 500;
 			margin-top: 32px;
 		}
 
@@ -41,21 +42,21 @@
 				left: 0%;
 				top: 0%;
 				animation: rotate-one 1s linear infinite;
-				border-bottom: 3px solid var(--text);
+				border-bottom: 4px solid var(--text-0);
 			}
 
 			.two {
 				right: 0%;
 				top: 0%;
 				animation: rotate-two 1s linear infinite;
-				border-right: 3px solid var(--text);
+				border-right: 4px solid var(--text-0);
 			}
 
 			.three {
 				right: 0%;
 				bottom: 0%;
 				animation: rotate-three 1s linear infinite;
-				border-top: 3px solid var(--text);
+				border-top: 4px solid var(--text-0);
 			}
 		}
 	}

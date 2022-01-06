@@ -2,7 +2,7 @@ const { scraper } = require("./scraper");
 const ScrapedData = require("./ScrapedDataModel");
 
 const postData = async () => {
-	const data = await scraper(3);
+	const data = await scraper(20);
 	const newScrapedData = new ScrapedData({ data });
 
 	try {

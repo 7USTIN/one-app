@@ -1,34 +1,54 @@
 <script lang="ts">
 	import { onMount } from "svelte";
+	import { fade } from "svelte/transition";
+
 	import Loader from "./components/Loader.svelte";
+	import Navbar from "./components/Navbar.svelte";
+	import Content from "./components/Content.svelte";
+
+	interface data {
+		name: string;
+		key: string;
+		shuffledResults: [];
+	}
 
 	let loading = true;
-	let data: [];
+	let data: data;
+	let source: { name: string; results: [] };
 
 	const fetchScrapingData = async () => {
 		await fetch("/api/")
 			.then((res) => res.json())
-			.then((res) => (data = res))
+			.then((res) => (data = res[0].data))
 			.catch(console.error);
 
 		loading = false;
+		source = {
+			name: "All In One",
+			results: data.shuffledResults,
+		};
 	};
 	onMount(fetchScrapingData);
 </script>
 
 <main>
 	{#if loading}
-		<div class="loading-wrapper">
+		<div class="loading-wrapper" transition:fade>
 			<Loader text="Fetching articles" size={72} />
 		</div>
 	{:else}
-		<pre>{JSON.stringify(data, null, "\t")}</pre>
+		<Navbar bind:source {data} />
+		<Content {source} />
 	{/if}
 </main>
 
 <style lang="scss">
 	:global(:root) {
-		--text: #151515;
+		--text-0: #2c2f32;
+		--text-1: #868b90;
+		--bg-0: #fcfcfc;
+		--bg-1: #f6f7f8;
+		--bg-2: #efefef;
 	}
 
 	:global(*) {
@@ -41,19 +61,31 @@
 	:global(body, button, input) {
 		font-family: "Inter", sans-serif;
 		font-size: 14px;
-		color: var(--text);
+		color: var(--text-0);
+		background: var(--bg-1);
+	}
+
+	:global(.material-icons) {
+		user-select: none;
+		-moz-user-select: none;
+		-webkit-user-select: none;
 	}
 
 	main {
 		width: 100vw;
 		height: 100vh;
+		display: flex;
 
 		.loading-wrapper {
+			position: fixed;
+			top: 0;
+			left: 0;
 			width: 100%;
 			height: 100%;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			background: var(--bg-0);
 		}
 	}
 </style>
