@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { icons } from "../utils/icons";
+
 	interface data {
 		name: string;
 		key: string;
@@ -6,33 +8,10 @@
 	}
 
 	export let data: data;
-	export let source: { name: string; results: [] };
+	export let source: { name: string; key?: string; results: [] };
 
-	const icons = {
-		reddit: {
-			url: "https://user-images.githubusercontent.com/81305164/148321970-b687aaff-6f8f-4978-897b-898c02f5ce31.png",
-			filter: "saturate(0%)",
-		},
-		githubTrending: {
-			url: "https://user-images.githubusercontent.com/81305164/148335788-e8edbc61-ddfb-459e-997e-fd993a4e617d.png",
-			filter: "saturate(0%) contrast(45%) brightness(150%)",
-		},
-		hackerNews: {
-			url: "https://user-images.githubusercontent.com/81305164/148322076-75a9910a-8d38-4f2f-91cc-58f9179d2468.png",
-			filter: "saturate(0%) brightness(90%)",
-		},
-		dev: {
-			url: "https://user-images.githubusercontent.com/81305164/148321809-dc01053f-3fbf-4207-9fb4-08013970daa0.png",
-			filter: "saturate(0%) contrast(40%) brightness(150%)",
-		},
-		designerNews: {
-			url: "https://user-images.githubusercontent.com/81305164/148322126-3730c766-1965-4283-a6f5-7bdee51017f0.png",
-			filter: "saturate(0%) contrast(60%) brightness(150%)",
-		},
-		slashdot: {
-			url: "https://user-images.githubusercontent.com/81305164/148322185-71f669e9-bb86-4fec-b721-edafe5faf28c.png",
-			filter: "saturate(0%) contrast(80%) brightness(125%)",
-		},
+	const resetScroll = () => {
+		document.getElementsByTagName("section")[0].scrollTo(0, 0);
 	};
 </script>
 
@@ -45,11 +24,12 @@
 		<button
 			on:click={() => {
 				source = { name: "All In One", results: data.shuffledResults };
+				resetScroll();
 			}}
 			class:selected={source.name === "All In One"}
 			class="all-in-one"
 		>
-			<i class="material-icons">space_dashboard</i>
+			<i class="material-icons">auto_stories</i>
 			<p>All In One</p>
 		</button>
 
@@ -58,7 +38,10 @@
 		{#each Object.values(data) as { name, key }, idx (idx)}
 			{#if name}
 				<button
-					on:click={() => (source = data[key])}
+					on:click={() => {
+						source = data[key];
+						resetScroll();
+					}}
 					class:selected={source.name === name}
 				>
 					<img
@@ -76,15 +59,13 @@
 
 <style lang="scss">
 	nav {
-		position: fixed;
-		top: 0;
-		left: 0;
 		width: 25vw;
 		height: 100vh;
-		background: var(--bg-0);
+		background: var(--bg-1);
 		display: flex;
 		flex-direction: column;
 		padding: 32px 6vw;
+		overflow: auto;
 
 		@media screen and (max-width: 1420px) {
 			padding: 32px 4vw;
@@ -95,8 +76,8 @@
 		}
 
 		@media screen and (max-width: 900px) {
-			width: auto;
-			padding: 32px 2.5vw;
+			width: 60px;
+			padding: 32px 12px;
 		}
 
 		.logo {
@@ -107,12 +88,16 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			margin-left: 12px;
 
 			@media screen and (max-width: 900px) {
 				width: 36px;
+				min-width: 36px;
 				height: 36px;
+				min-height: 36px;
 				margin: 0 auto;
 				border-radius: 10px;
+				margin-left: 0;
 			}
 
 			i {
@@ -130,6 +115,10 @@
 			flex-direction: column;
 			margin-top: 64px;
 
+			@media screen and (max-width: 900px) {
+				margin-top: 32px;
+			}
+
 			.divider {
 				background: var(--bg-2);
 				width: 100%;
@@ -138,10 +127,14 @@
 			}
 
 			.all-in-one {
-				padding: 9px 12px;
+				padding: 10px 12px;
 
 				@media screen and (max-width: 900px) {
 					padding: 6px;
+				}
+
+				i {
+					font-size: 21px;
 				}
 			}
 
@@ -150,12 +143,12 @@
 				align-items: center;
 				font-weight: 600;
 				font-size: 16px;
-				border-radius: 12px;
+				border-radius: 6px;
 				color: var(--text-1);
 				padding: 11px 12px;
 				border: none;
 				cursor: pointer;
-				background: var(--bg-0);
+				background: var(--bg-1);
 				margin: 4px 0;
 				transition: 125ms;
 				white-space: nowrap;

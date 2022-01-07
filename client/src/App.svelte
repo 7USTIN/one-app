@@ -6,15 +6,9 @@
 	import Navbar from "./components/Navbar.svelte";
 	import Content from "./components/Content.svelte";
 
-	interface data {
-		name: string;
-		key: string;
-		shuffledResults: [];
-	}
-
 	let loading = true;
-	let data: data;
-	let source: { name: string; results: [] };
+	let data: { name: string; key: string; shuffledResults: [] };
+	let source: { name: string; key?: string; results: [] };
 
 	const fetchScrapingData = async () => {
 		await fetch("/api/")
@@ -33,7 +27,7 @@
 
 <main>
 	{#if loading}
-		<div class="loading-wrapper" transition:fade>
+		<div class="loading-wrapper" transition:fade={{ duration: 250 }}>
 			<Loader text="Fetching articles" size={72} />
 		</div>
 	{:else}
@@ -62,7 +56,7 @@
 		font-family: "Inter", sans-serif;
 		font-size: 14px;
 		color: var(--text-0);
-		background: var(--bg-1);
+		background: var(--bg-0);
 	}
 
 	:global(.material-icons) {

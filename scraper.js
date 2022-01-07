@@ -69,6 +69,7 @@ const scraper = async (requestedNum) => {
 				await page.$("span[class='next-button'] > a[rel='nofollow next']"),
 			scrapeData: async (element) => {
 				return {
+					source: "Reddit",
 					postURL: await evalElement(
 						element,
 						"p[class='title'] > a[class*='title']",
@@ -113,6 +114,7 @@ const scraper = async (requestedNum) => {
 			getNextPageButton: () => null,
 			scrapeData: async (element) => {
 				const scrapedData = {
+					source: "Github Trending",
 					postURL: await evalElement(
 						element,
 						"h1[class*='lh-condensed'] > a",
@@ -141,8 +143,10 @@ const scraper = async (requestedNum) => {
 					comments: null,
 				};
 
+				const { title, description } = scrapedData;
+
 				scrapedData.authorURL = `https://github.com/${scrapedData.author}`;
-				scrapedData.title = `${scrapedData.title} - ${scrapedData.description}`;
+				scrapedData.title = `${title} ${description ? "- " + description : ""}`;
 
 				return scrapedData;
 			},
@@ -158,11 +162,19 @@ const scraper = async (requestedNum) => {
 				await page.$("table[class='itemlist'] > tbody a[class='morelink']"),
 			scrapeData: async (element) => {
 				return {
+					source: "Hacker News",
 					postURL: await evalElement(
 						element,
 						"td:not([valign]) > a[class='titlelink']",
-						(node) =>
-							`https://news.ycombinator.com/${node.getAttribute("href")}`
+						(node) => {
+							const href = node.getAttribute("href");
+
+							if (/http/.test(href)) {
+								return href;
+							} else {
+								return `https://news.ycombinator.com/${href}`;
+							}
+						}
 					),
 					title: await evalElement(
 						element,
@@ -216,6 +228,7 @@ const scraper = async (requestedNum) => {
 			getNextPageButton: () => null,
 			scrapeData: async (element) => {
 				const scrapedData = {
+					source: "DEV",
 					postURL: await evalElement(
 						element,
 						"h2[class='crayons-story__title'] > a[id*='article-link']",
@@ -263,6 +276,7 @@ const scraper = async (requestedNum) => {
 				),
 			scrapeData: async (element) => {
 				return {
+					source: "Designer News",
 					postURL: await evalElement(
 						element,
 						"div[class*='list-story-main-grouper'] > a[class='montana-item-title']",
@@ -307,6 +321,7 @@ const scraper = async (requestedNum) => {
 				await page.$("div[id='fh-paginate'] > a[class='prevnextbutact']"),
 			scrapeData: async (element) => {
 				return {
+					source: "Slashdot",
 					postURL: await evalElement(
 						element,
 						"span[class='story-title'] > a:not([class])",
