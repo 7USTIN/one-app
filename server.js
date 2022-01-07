@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 
 const apiRouter = require("./apiRouter");
 const { scheduler } = require("./scheduler");
@@ -23,6 +24,14 @@ mongoose
 	.catch(console.error);
 
 app.use("/api/", apiRouter);
+
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static("client/public"));
+
+	app.use("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "cleint", "public", "index.html"));
+	});
+}
 
 app.listen(port, () => {
 	console.log(`Express server listening on ${port}`);
