@@ -4,8 +4,11 @@
 	export let source: { name: string; key?: string; results: [] };
 
 	const onlyNumbers = (string: string) => {
-		const regex = new RegExp("\\D", "g");
-		return string.replace(regex, "") || 0;
+		if (/\./g.test(string)) {
+			return Number(string.replace(/[^\d.-]/g, "")) * 1000 || 0;
+		} else {
+			return string.replace(/[^\d.-]/g, "") || 0;
+		}
 	};
 
 	const checkURL = (string: string) => {
